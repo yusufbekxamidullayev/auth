@@ -32,14 +32,24 @@ axiosInstance.interceptors.response.use(
 
             try {
                 const refreshToken = localStorage.getItem("refreshToken");
-                const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
+                if (!refreshToken) {
+                    window.location.href = "/login";
+                    return Promise.reject(error);
+                }
+
+                const response = await axios.post(`${BASE_URL}/Auth/refresh-token`, {
                     refreshToken,
                 });
 
-                const { accessToken } = response.data;
-                localStorage.setItem("accessToken", accessToken);
+                // Response strukturasiga qarab token olish
+                const newToken = response.data?.data?.token || response.data?.accessToken;
 
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                if (!newToken) {
+                    throw new Error("Token kelmadi");
+                }
+
+                localStorage.setItem("accessToken", newToken);
+                originalRequest.headers.Authorization = `Bearer ${newToken}`;
                 return axiosInstance(originalRequest);
             } catch (refreshError) {
                 localStorage.removeItem("accessToken");
