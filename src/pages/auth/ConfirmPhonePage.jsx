@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useAuthStore from "../../store/authStore";
+import React, { useEffect, useState } from "react";
 
 const OtpInput = ({ value, onChange }) => {
     const inputRefs = React.useRef([]);
@@ -62,11 +62,15 @@ const ConfirmPhonePage = () => {
 
     // Countdown timer
     useEffect(() => {
-        if (countdown <= 0) {
-            setCanResend(true);
-            return;
-        }
-        const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
+        if (countdown <= 0) return;
+
+        const timer = setTimeout(() => {
+            if (countdown === 1) {
+                setCanResend(true);
+            }
+            setCountdown(c => c - 1);
+        }, 1000);
+
         return () => clearTimeout(timer);
     }, [countdown]);
 

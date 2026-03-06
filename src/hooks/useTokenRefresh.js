@@ -3,7 +3,7 @@ import { refreshTokenApi } from "../api/authApi";
 import useAuthStore from "../store/authStore";
 import { getRefreshToken } from "../utils/tokenUtils";
 
-// Har 15 minutda token refresh qiluvchi hook
+// Har 15 minutda token refresh qiluvchi hoook
 const useTokenRefresh = () => {
     const { isAuth, updateAccessToken, logout } = useAuthStore();
 
